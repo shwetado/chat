@@ -6,18 +6,10 @@
       href="favicon.ico"/>
 </head>
 <body background="bg.jpg">
-<form name="login">
+<form name="login" action="/template.html">
 	<font color="white">Username :</font><input type="text" name="userid"/><br/><br/>
 	<font color="white">Password :</font><input type="password" name="pswrd"/><br/><br/>
-	<input type="button" onclick="check(this.form)" value="Login"/>
-	<script language="javascript">
-	function check(form){
-		if(form.pswrd.value == "und3f!n3d")
-			window.location="template.html";
-		else
-			alert("Error Password or Username");
-	}
-	</script>
+	<input type="submit" value="Login"/>
 	</form>
 </body>
 </html>

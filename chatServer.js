@@ -10,8 +10,7 @@ var out_of_stock = function(req,res){
 
 var serve = function (req,res){
 	console.log(req.connection.remoteAddress);
-	var req_url = url.parse(req.url,true);  	
-	console.log(req_url.path);    
+	var req_url = url.parse(req.url,true); 
 	routes[req_url.pathname] && routes[req_url.pathname](req,res) || out_of_stock(req,res);
 };
 
