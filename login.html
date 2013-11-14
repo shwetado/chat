@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>Server</title>
+	<link rel="icon" 
+      type="image/png" 
+      href="favicon.ico"/>
+</head>
+<body>
+<form name="login">
+	Username<input type="text" name="userid"/>
+	Password<input type="password" name="pswrd"/>
+	<input type="button" onclick="check(this.form)" value="Login"/>
+	<input type="reset" value="Cancel"/>
+	<script language="javascript">
+	function check(form){
+		if(form.userid.value == "asssk" && form.pswrd.value == "und3f!n3d")
+			window.open('template.html')
+		else
+			alert("Error Password or Username")
+	}
+	</script>
+	</form>
+</body>
+</html>
