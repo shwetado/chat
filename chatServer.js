@@ -1,6 +1,6 @@
 var http = require('http');
 var url = require('url');
-var routes = require('./chat_routes').routes;
+var routes = require('./javascript/chat_routes').routes;
 
 var out_of_stock = function(req,res){
 	res.writeHead(404, {'Content-Type': 'text/html'});
