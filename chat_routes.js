@@ -1,11 +1,11 @@
 var url = require('url');
 var fs = require('fs');
-var msgFileName = 'msgFile/messages.json';
+var msgFileName = 'data/messages.json';
 var messages = fs.existsSync(msgFileName) && JSON.parse(fs.readFileSync(msgFileName,"utf-8")) || [];
-var template = fs.readFileSync('./html/template.html',"utf-8");
-var bg_jpg = fs.readFileSync('./images/bg.jpg');
-var fav_ico = fs.readFileSync('./images/favicon.ico');
-var temp = fs.readFileSync('./html/login.html','utf-8');
+var template = fs.readFileSync('./view/template.html',"utf-8");
+var bg_jpg = fs.readFileSync('./public/images/bg.jpg');
+var fav_ico = fs.readFileSync('./public/images/favicon.ico');
+var temp = fs.readFileSync('./public/login.html','utf-8');
 var contentType = {html:'text/html',jpg:'image/jpeg',ico:'image/x-icon'};
 
 var handler = {};

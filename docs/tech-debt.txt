@@ -1,0 +1,3 @@
+all server code is generally js. So, dont have a js folder.
+lot of view/presentation details is present in the server/handler code.
+convert form action to post
