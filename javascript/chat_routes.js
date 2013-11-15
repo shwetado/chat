@@ -21,11 +21,13 @@ handler['/template.html'] = function(req,res){
 };
 
 handler['/chat'] = function(req,res){
+  var tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
   var query = url.parse(req.url,true).query; 
   var user = query.name ;
   var msg = query.message;
   var ip = (req.connection.remoteAddress);
-  var item = user + " [ " + ip + " ] " + " : " + msg;
+  var date = new Date().toString().split('G')[0];
+  var item = user + " [ " + ip + " ] " + " : " + tab + msg + tab + " ( " + date + " ) ";
   user && msg && messages.push(item) && fs.writeFileSync(msgFileName,JSON.stringify(messages));
   res.writeHead(200, {'Content-Type': contentType.html});
   res.write(template.replace(/{MESSAGES}/,messages.join('<br/>'))); 
