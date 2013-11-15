@@ -18,7 +18,7 @@ handler['/template.html'] = function(req,res){
  	user && msg && messages.push(item) && fs.writeFileSync(msgFileName,JSON.stringify(messages));
   res.writeHead(200, {'Content-Type': contentType.html});
   if(req_url.query.pswrd == "a" || req_url.query.message)
-    res.write(template.replace(/{MESSAGES}/,messages.join('<br/>'))); 
+    res.write(template.replace(/{MESSAGES}/,messages.reverse().join('<br/>'))); 
   else{
     res.writeHead(200,{'Content-Type': contentType.html});
     res.write(temp); 
