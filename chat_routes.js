@@ -11,8 +11,9 @@ var contentType = {html:'text/html',jpg:'image/jpeg',ico:'image/x-icon'};
 var handler = {};
 handler['/template.html'] = function(req,res){
   res.writeHead(200, {'Content-Type': contentType.html});
-  if(url.parse(req.url,true).query.pswrd == "a")
-    res.write(template.replace(/{MESSAGES}/,messages.join('<br/>'))); 
+  if(url.parse(req.url,true).query.pswrd == "a"){
+    var userid = url.parse(req.url,true).query.userid;
+    res.write(template.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid)); }
   else{
     res.write(temp); 
     res.write("<h2><font color = 'white'> Incorrect password please try again!<font><h2/>");
@@ -22,6 +23,7 @@ handler['/template.html'] = function(req,res){
 
 handler['/chat'] = function(req,res){
   var tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  var userid = url.parse(req.url,true).query.name;
   var query = url.parse(req.url,true).query; 
   var user = query.name ;
   var msg = query.message;
@@ -30,7 +32,7 @@ handler['/chat'] = function(req,res){
   var item = user + " [ " + ip + " ] " + " : " + tab + msg + tab + " ( " + date + " ) ";
   user && msg && messages.push(item) && fs.writeFileSync(msgFileName,JSON.stringify(messages));
   res.writeHead(200, {'Content-Type': contentType.html});
-  res.write(template.replace(/{MESSAGES}/,messages.join('<br/>'))); 
+  res.write(template.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
   res.end();
 }
 
