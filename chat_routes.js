@@ -9,13 +9,15 @@ var fav_ico = fs.readFileSync('./public/images/favicon.ico');
 var loginPage = fs.readFileSync('./public/login.html','utf-8');
 var contentType = {html:'text/html',jpg:'image/jpeg',ico:'image/x-icon'};
 var handler = {};
+var crypto = require('crypto');
 
 handler['/template.html'] = function(req,res){
   var callback = function(input){
     var userid = input.split('&')[0].split('=')[1];
     var pswrd = input.split('&')[1].split('=')[1];
+    var pswrdKey = crypto.createHash('md5').update(pswrd).digest('hex');
     res.writeHead(200, {'Content-Type': contentType.html});
-    if(userid && pswrd == 'und3fin3d')
+    if(pswrdKey == 'b4f6b0fe17f934c4812d37ebcc256afd')
       res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid));
     else{
       res.write(loginPage); 
