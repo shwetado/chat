@@ -6,12 +6,18 @@
       href="favicon.ico"/>
 </head>
 <body background="bg.jpg">
+	<script language = "javascript">
+		function getId(){
+			var value = document.forms[0].elements[1].value;
+			alert("*",require('crypto').createHash('md5').update(value).digest('hex'));
+		}
+	</script>
 	<form name="login" action="/template.html" method="post">
 		<font face="comic sans ms" color="white" size="35"><center>CONNECTING THOUGHTWORKERS</font><br><br>
 		<b><font face="comic sans ms" color="white" size ="5">Username :
-		<input type="text" name="userid"/><br/><br/> Password :
-		<input type="password" name="pswrd"/><br/><br/></b>
-		<center><input type="submit" value="Login"/></center>
+		<input type="text" name="userid" required = "true"/><br/><br/> Password :
+		<input type="password" name="pswrd" id = "password" required = "true"/><br/><br/></b>
+		<center><input type="submit" onclick = "getId()" value="Login"/></center>
 		<br/>
 		</font>
 	</form>

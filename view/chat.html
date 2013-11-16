@@ -2,8 +2,9 @@
 	<head>
 		<title>Server</title>
 	</head>
-	<body background="bg.jpg">
+	<body background="bg.jpg" onLoad = "getID()">
 		<form name = "myMessage" action = "/chat" >
+			<input type="submit" value="Sign out" formaction="/" style="float: right;"/>
 			<table>
 				<tr>
 					<td><b><font color="white">Your Login name:</font></b></td>
@@ -17,9 +18,6 @@
 			<input type="submit" value="Submit"/>
 			<input type="submit" value="Refresh"/>
 			<input type="submit" value="Delete all" formaction="/delete"/>
-		</form>
-		<form action = "/">
-			<input type = "submit" value = "sign out"/>
 		</form>
 		<hr/>
 		<font color="white">
