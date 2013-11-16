@@ -4,6 +4,7 @@ var msgFileName = 'data/messages.json';
 var messages = fs.existsSync(msgFileName) && JSON.parse(fs.readFileSync(msgFileName,"utf-8")) || [];
 var chatPage = fs.readFileSync('./view/chat.html',"utf-8");
 var bg_jpg = fs.readFileSync('./public/images/bg.jpg');
+var image = fs.readFileSync('./public/images/chat.jpg');
 var fav_ico = fs.readFileSync('./public/images/favicon.ico');
 var loginPage = fs.readFileSync('./public/login.html','utf-8');
 var contentType = {html:'text/html',jpg:'image/jpeg',ico:'image/x-icon'};
@@ -14,11 +15,11 @@ handler['/template.html'] = function(req,res){
     var userid = input.split('&')[0].split('=')[1];
     var pswrd = input.split('&')[1].split('=')[1];
     res.writeHead(200, {'Content-Type': contentType.html});
-    if(pswrd == 'a')
-      res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
+    if(userid && pswrd == 'und3fin3d')
+      res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid));
     else{
       res.write(loginPage); 
-      res.write("<h2><font color = 'white'> Incorrect password please try again!<font><h2/>");
+      res.write("<h2><font color = 'white'> Incorrect password or login name please try again!<font><h2/>");
     }
     res.end();
   }
@@ -54,6 +55,13 @@ handler['/bg.jpg'] = function(req,res){
   res.write(bg_jpg); 
 	res.end();	
 };
+
+handler['/chat.jpg'] = function(req,res){
+  res.writeHead(200,{'Content-Type': contentType.jpg});
+  res.write(image); 
+  res.end();  
+};
+
 
 handler['/favicon.ico'] = function(req,res){
 	res.writeHead(200,{'Content-Type': contentType.ico});
