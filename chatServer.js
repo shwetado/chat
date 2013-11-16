@@ -10,9 +10,9 @@ var out_of_stock = function(req,res){
 };
 
 var serve = function (req,res){
-	var req_url = url.parse(req.url,true); 
-	routes[req_url.pathname] && routes[req_url.pathname](req,res) || out_of_stock(req,res);
-};
+	var req_url = url.parse(req.url,true);
+	var method = routes[req_url.pathname] || out_of_stock;
+	method(req,res);};
 
 http.createServer(serve).listen(8282);
 console.log('Server running at http://localhost:8282/');
