@@ -2,22 +2,26 @@ var url = require('url');
 var fs = require('fs');
 var msgFileName = 'data/messages.json';
 var messages = fs.existsSync(msgFileName) && JSON.parse(fs.readFileSync(msgFileName,"utf-8")) || [];
+var detailsFileName = 'data/details.json';
+var details = fs.existsSync(detailsFileName) && JSON.parse(fs.readFileSync(detailsFileName,"utf-8")) || {};
 var chatPage = fs.readFileSync('./view/chat.html',"utf-8");
 var bg_jpg = fs.readFileSync('./public/images/bg.jpg');
 var image = fs.readFileSync('./public/images/chat.jpg');
+var homepage = fs.readFileSync('./public/home.html');
 var fav_ico = fs.readFileSync('./public/images/favicon.ico');
 var loginPage = fs.readFileSync('./public/login.html','utf-8');
 var contentType = {html:'text/html',jpg:'image/jpeg',ico:'image/x-icon'};
+var signUpPage = fs.readFileSync('./public/signup.html','utf-8');
+ 
 var handler = {};
 var crypto = require('crypto');
 
-handler['/template.html'] = function(req,res){
-  var callback = function(input){
+handler['/template'] = function(req,res){
+  var checkPassword = function(input){
     var userid = input.split('&')[0].split('=')[1];
-    var pswrd = input.split('&')[1].split('=')[1];
-    var pswrdKey = crypto.createHash('md5').update(pswrd).digest('hex');
+    var password = input.split('&')[1].split('=')[1];
     res.writeHead(200, {'Content-Type': contentType.html});
-    if(pswrdKey == 'b4f6b0fe17f934c4812d37ebcc256afd')
+    if(password == details[userid])
       res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid));
     else{
       res.write(loginPage); 
@@ -26,12 +30,18 @@ handler['/template.html'] = function(req,res){
     res.end();
   }
   req.setEncoding('utf8');
-  req.on('data',callback);
+  req.on('data',checkPassword);
+};
+
+handler['/signUp'] = function(req,res){
+  res.writeHead(200,{'Content-Type': contentType.html});
+  res.write(signUpPage); 
+  res.end();  
 };
 
 handler['/delete'] = function(req,res){
   var userid = url.parse(req.url,true).query.name;
-  fs.writeFileSync(msgFileName,"[]");
+  fs.writeFile(msgFileName,"[]");
   messages = [];
   res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
   res.end();
@@ -46,7 +56,7 @@ handler['/chat'] = function(req,res){
   var ip = (req.connection.remoteAddress);
   var date = new Date().toString().split('G')[0];
   var item = user + " [ " + ip + " ] " + " : " + tab + msg + tab + " ( " + date + " ) ";
-  user && msg && messages.push(item) && fs.writeFileSync(msgFileName,JSON.stringify(messages));
+  user && msg && messages.push(item) && fs.writeFile(msgFileName,JSON.stringify(messages));
   res.writeHead(200, {'Content-Type': contentType.html});
   res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
   res.end();
@@ -64,18 +74,46 @@ handler['/chat.jpg'] = function(req,res){
   res.end();  
 };
 
-
 handler['/favicon.ico'] = function(req,res){
 	res.writeHead(200,{'Content-Type': contentType.ico});
   res.write(fav_ico); 
 	res.end();	
 };
 
-handler['/'] = function(req,res){
+handler['/login'] = function(req,res){
   var req_url = url.parse(req.url,true);
   res.writeHead(200,{'Content-Type': contentType.html});
   res.write(loginPage); 
   res.end();  
 };
+
+
+handler['/'] = function(req,res){
+  res.writeHead(200,{'Content-Type': contentType.html});
+  res.write(homepage);
+  res.end();  
+};
+
+handler['/index'] = function(req,res){
+  var getDetails = function(input){
+  var userid = input.split('&')[0].split('=')[1];
+  var password = input.split('&')[1].split('=')[1];
+  var confirmPass = input.split('&')[2].split('=')[1];
+  if(password != confirmPass || details[userid]){
+    res.writeHead(200,{'Content-Type': contentType.html});
+    res.write(signUpPage);
+    res.write("<center><h2><font color = 'white'> Details are not matching!!<font><h2/></center>");
+  }
+  else{
+    details[userid] = password;
+    fs.writeFile(detailsFileName,JSON.stringify(details));
+    res.writeHead(200,{'Content-Type': contentType.html});
+    res.write(homepage);    
+  }
+  res.end();
+  }
+  req.setEncoding('utf8');
+  req.on('data',getDetails);
+}
 
 exports.routes = handler;

@@ -9,10 +9,9 @@
 	<script language = "javascript">
 		function getId(){
 			var value = document.forms[0].elements[1].value;
-			alert("*",require('crypto').createHash('md5').update(value).digest('hex'));
 		}
 	</script>
-	<form name="login" action="/template.html" method="post">
+	<form name="login" action="/template" method="post">
 		<font face="comic sans ms" color="white" size="35"><center>CONNECTING THOUGHTWORKERS</font><br><br>
 		<b><font face="comic sans ms" color="white" size ="5">Username :
 		<input type="text" name="userid" required = "true"/><br/><br/> Password :
