@@ -6,6 +6,9 @@ var detailsFileName = 'data/details.json';
 var details = fs.existsSync(detailsFileName) && JSON.parse(fs.readFileSync(detailsFileName,"utf-8")) || {};
 var chatPage = fs.readFileSync('./view/chat.html',"utf-8");
 var bg_jpg = fs.readFileSync('./public/images/bg.jpg');
+var login = fs.readFileSync('./public/images/login.jpg');
+var signup = fs.readFileSync('./public/images/signup.jpg');
+var signupbg = fs.readFileSync('./public/images/signup-bg.jpg');
 var image = fs.readFileSync('./public/images/chat.jpg');
 var homepage = fs.readFileSync('./public/home.html');
 var fav_ico = fs.readFileSync('./public/images/favicon.ico');
@@ -39,6 +42,7 @@ handler['/signUp'] = function(req,res){
   res.end();  
 };
 
+
 handler['/delete'] = function(req,res){
   var userid = url.parse(req.url,true).query.name;
   fs.writeFile(msgFileName,"[]");
@@ -68,9 +72,27 @@ handler['/bg.jpg'] = function(req,res){
 	res.end();	
 };
 
+handler['/login.jpg'] = function(req,res){
+  res.writeHead(200,{'Content-Type': contentType.jpg});
+  res.write(login); 
+  res.end();  
+};
+
+handler['/signupbg.jpg'] = function(req,res){
+  res.writeHead(200,{'Content-Type': contentType.jpg});
+  res.write(signupbg); 
+  res.end();  
+};
+
 handler['/chat.jpg'] = function(req,res){
   res.writeHead(200,{'Content-Type': contentType.jpg});
   res.write(image); 
+  res.end();  
+};
+
+handler['/signup.jpg'] = function(req,res){
+  res.writeHead(200,{'Content-Type': contentType.jpg});
+  res.write(signup); 
   res.end();  
 };
 
