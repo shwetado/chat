@@ -27,7 +27,6 @@ handler['/signUp'] = function(req,res){
   res.end();  
 };
 
-
 handler['/delete'] = function(req,res){
   var userid = content.url.parse(req.url,true).query.name;
   fs.writeFile(content.msgFileName,"[]");
@@ -68,6 +67,12 @@ handler['/bg.jpg'] = function(req,res){
 	res.end();	
 };
 
+handler['/home.jpg'] = function(req,res){
+  res.writeHead(200,{'Content-Type': contentType.jpg});
+  res.write(content.home); 
+  res.end();  
+};
+
 handler['/login.jpg'] = function(req,res){
   res.writeHead(200,{'Content-Type': contentType.jpg});
   res.write(content.login); 
@@ -104,18 +109,25 @@ handler['/index'] = function(req,res){
   var userid = input.split('&')[0].split('=')[1];
   var password = input.split('&')[1].split('=')[1];
   var confirmPass = input.split('&')[2].split('=')[1];
-  if( content.details[userid] ){
+  var expr = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+  if(password.match(expr)==null){
+    res.writeHead(200,{'Content-Type': contentType.html});
+    res.write(content.signUpPage);
+    res.write("<center><h2><font color = 'white'>Passwords must contain at least 1 upper case letter,<br>1 lower case letter,<br>1 number or special character,<br>at least 8 characters in length<font><h2/></center>");
+    res.end();
+  }
+  else if( content.details[userid] ){
     res.writeHead(200,{'Content-Type': contentType.html});
     res.write(content.signUpPage);
     res.write("<center><h2><font color = 'white'> Username already exists!!<font><h2/></center>");
     res.end();
   }
-  if(password != confirmPass ){
+  else if(password != confirmPass ){
     res.writeHead(200,{'Content-Type': contentType.html});
     res.write(content.signUpPage);
     res.write("<center><h2><font color = 'white'> Passwords do not match!!<font><h2/></center>");
   }
-  else{
+  else {
     content.details[userid] = password;
     fs.writeFile(content.detailsFileName,JSON.stringify(content.details));
     res.writeHead(200,{'Content-Type': contentType.html});
