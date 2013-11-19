@@ -28,7 +28,7 @@ handler['/template'] = function(req,res){
       res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid));
     else{
       res.write(loginPage); 
-      res.write("<h2><font color = 'white'> Incorrect password or login name please try again!<font><h2/>");
+      res.write("<h1> Incorrect password or login name please try again!<h1/>");
     }
     res.end();
   }
@@ -38,7 +38,7 @@ handler['/template'] = function(req,res){
 
 handler['/signUp'] = function(req,res){
   res.writeHead(200,{'Content-Type': contentType.html});
-  res.write(signUpPage); 
+  res.write(signUpPage);
   res.end();  
 };
 
@@ -47,6 +47,12 @@ handler['/delete'] = function(req,res){
   var userid = url.parse(req.url,true).query.name;
   fs.writeFile(msgFileName,"[]");
   messages = [];
+  res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
+  res.end();
+}
+
+handler['/refresh'] = function(req,res){
+  var userid = url.parse(req.url,true).query.name;
   res.write(chatPage.replace(/{MESSAGES}/,messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
   res.end();
 }
@@ -109,7 +115,6 @@ handler['/login'] = function(req,res){
   res.end();  
 };
 
-
 handler['/'] = function(req,res){
   res.writeHead(200,{'Content-Type': contentType.html});
   res.write(homepage);
@@ -121,16 +126,23 @@ handler['/index'] = function(req,res){
   var userid = input.split('&')[0].split('=')[1];
   var password = input.split('&')[1].split('=')[1];
   var confirmPass = input.split('&')[2].split('=')[1];
-  if(password != confirmPass || details[userid]){
+  if( details[userid] ){
     res.writeHead(200,{'Content-Type': contentType.html});
     res.write(signUpPage);
-    res.write("<center><h2><font color = 'white'> Details are not matching!!<font><h2/></center>");
+    res.write("<center><h2><font color = 'white'> Username already exists!!<font><h2/></center>");
+    res.end();
+  }
+  if(password != confirmPass ){
+    res.writeHead(200,{'Content-Type': contentType.html});
+    res.write(signUpPage);
+    res.write("<center><h2><font color = 'white'> Passwords do not match!!<font><h2/></center>");
   }
   else{
     details[userid] = password;
     fs.writeFile(detailsFileName,JSON.stringify(details));
     res.writeHead(200,{'Content-Type': contentType.html});
     res.write(homepage);    
+    res.write("<center><h2><font color = 'white'> Account created successfully!<font><h2/></center>");
   }
   res.end();
   }
