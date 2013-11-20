@@ -13,5 +13,5 @@ content.homepage = fs.readFileSync('./public/home.html');
 content.fav_ico = fs.readFileSync('./public/images/favicon.ico');
 content.loginPage = fs.readFileSync('./public/login.html','utf-8');
 content.signUpPage = fs.readFileSync('./public/signup.html','utf-8');
-
+content.querystring = require('querystring');
 exports.content = content;

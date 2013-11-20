@@ -4,9 +4,12 @@ var contentType = {html:'text/html',jpg:'image/jpeg',ico:'image/x-icon'};
 var handler = {};
 
 handler['/template'] = function(req,res){
+
   var checkPassword = function(input){
-    var userid = input.split('&')[0].split('=')[1];
-    var password = input.split('&')[1].split('=')[1];
+    var details = content.querystring.parse(input);
+    console.log(details);
+    var userid = details.userid;
+    var password = details.pswrd;
     res.writeHead(200, {'Content-Type': contentType.html});
     if( password == content.details[userid])
       res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid));
@@ -18,7 +21,6 @@ handler['/template'] = function(req,res){
   }
   req.setEncoding('utf8');
   req.on('data',checkPassword);
-
 };
 
 handler['/signUp'] = function(req,res){
@@ -28,37 +30,43 @@ handler['/signUp'] = function(req,res){
 };
 
 handler['/delete'] = function(req,res){
-  var userid = content.url.parse(req.url,true).query.name;
-  fs.writeFile(content.msgFileName,"[]");
-  content.messages = [];
-  res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
-  res.end();
+  var deleteMsg = function(input){
+    var userid = input.split('&')[0].split('=')[1];
+    fs.writeFile(content.msgFileName,"[]");
+    content.messages = [];
+    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
+    res.end();
+  }
+  req.setEncoding('utf8');
+  req.on('data',deleteMsg);
 }
 
 handler['/refresh'] = function(req,res){
-  var userid = content.url.parse(req.url,true).query.name;
-  res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
-  res.end();
+   var refresh = function(input){
+    var userid = input.split('&')[0].split('=')[1];
+    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
+    res.end();
+  }
+  req.setEncoding('utf8');
+  req.on('data',refresh);
 }
 
 handler['/chat'] = function(req,res){
   var tab = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-  var userid = content.url.parse(req.url,true).query.name;
-  var query = content.url.parse(req.url,true).query; 
-  var hidden = query.hidden;
-  var user = query.name ;
-  var msg = query.message;
-  var ip = (req.connection.remoteAddress);
-  var date = new Date().toString().split('G')[0];
-  var item = user + " [ " + ip + " ] " + " : " + tab + msg + tab + " ( " + date + " ) ";
-  user && msg && content.messages.push(item) && fs.writeFile(content.msgFileName,JSON.stringify(content.messages));
-  res.writeHead(200, {'Content-Type': contentType.html});
-  if(hidden)
-    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid));
-  else
-    res.write(content.loginPage);
-  res.end();
-
+  var display= function(input){
+    var details = content.querystring.parse(input);
+    var user = details.name;
+    var msg = details.message;
+    var ip = (req.connection.remoteAddress);
+    var date = new Date().toString().split('G')[0];
+    var item = user + " [ " + ip + " ] " + " : " + tab + msg + tab + " ( " + date + " ) ";
+    user && msg && content.messages.push(item) && fs.writeFile(content.msgFileName,JSON.stringify(content.messages));
+    res.writeHead(200, {'Content-Type': contentType.html});
+    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,user));
+    res.end();
+  }
+  req.setEncoding('utf8');
+  req.on('data',display);
 }
 
 handler['/bg.jpg'] = function(req,res){
@@ -106,9 +114,11 @@ handler['/'] = function(req,res){
 
 handler['/index'] = function(req,res){
   var getDetails = function(input){
-  var userid = input.split('&')[0].split('=')[1];
-  var password = input.split('&')[1].split('=')[1];
-  var confirmPass = input.split('&')[2].split('=')[1];
+  var details = content.querystring.parse(input);
+  console.log(details)
+  var userid = details.name;
+  var password = details.pass;
+  var confirmPass = details.repass;
   var expr = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
   if(password.match(expr)==null){
     res.writeHead(200,{'Content-Type': contentType.html});
