@@ -1,5 +1,15 @@
 <html>
 	<head>
+		<style>
+		textarea.transbox
+			{
+				width:764px;
+				height:417px;
+				background-color:#ffffff;
+				border: solid black;
+				opacity:0.4;
+			}
+</style>
 		<title>Server</title>
 	</head>
 	<body background="bg.jpg">
@@ -7,11 +17,11 @@
 			<input type="submit" value="Sign out" formaction="/" style="float: right;"/>
 			<table>
 				<tr>
-					<td><b><font color="white">Your Login name:</font></b></td>
+					<td><b><font color="black">Your Login name:</font></b></td>
 					<td><input type="text" name="name" value= {USERNAME} readonly/></td>
 				</tr>
 				<tr>
-					<td><b><font color="white">Your message:</font></b></td>
+					<td><b><font color="black">Your message:</font></b></td>
 					<td><textarea rows = "4" cols = "100" name = "message"></textarea></td>
 				</tr>
 			</table>	
@@ -21,12 +31,12 @@
 			<input type="hidden" name="hidden" value="hidden">
 		</form>
 		<hr/>
-		<font color="white">
+		<font color="black">
 			<h2>Messages</h2>
-			<b><font size = "4">
-				{MESSAGES}
-			</font></b>
+			<b><i><font size = "5">
+			<textarea class="transbox">{MESSAGES}</textarea>
 		</font>
+			</font></b></i>
 
 	</body>
 </html>

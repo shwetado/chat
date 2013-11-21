@@ -1,5 +1,4 @@
-
-var main = function(arr1,arr2){
+var areEqual = function(arr1,arr2){
 	var count = 0;
 
 	if(arr1.length != arr2.length)
@@ -11,4 +10,4 @@ var main = function(arr1,arr2){
 	return true;
 }
 
-exports.main = main;
+exports.areEqual = areEqual;

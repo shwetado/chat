@@ -12,7 +12,7 @@ handler['/template'] = function(req,res){
     var password = details.pswrd;
     res.writeHead(200, {'Content-Type': contentType.html});
     if( password == content.details[userid])
-      res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid));
+      res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('\n')).replace(/{USERNAME}/,userid));
     else{
       res.write(content.loginPage); 
       res.write("<center><h2><font color = 'white'>Incorrect password or login name please try again!</h2></center></font>");
@@ -34,7 +34,7 @@ handler['/delete'] = function(req,res){
     var userid = input.split('&')[0].split('=')[1];
     fs.writeFile(content.msgFileName,"[]");
     content.messages = [];
-    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
+    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('\n')).replace(/{USERNAME}/,userid)); 
     res.end();
   }
   req.setEncoding('utf8');
@@ -44,7 +44,7 @@ handler['/delete'] = function(req,res){
 handler['/refresh'] = function(req,res){
    var refresh = function(input){
     var userid = input.split('&')[0].split('=')[1];
-    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,userid)); 
+    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('\n')).replace(/{USERNAME}/,userid)); 
     res.end();
   }
   req.setEncoding('utf8');
@@ -57,12 +57,11 @@ handler['/chat'] = function(req,res){
     var details = content.querystring.parse(input);
     var user = details.name;
     var msg = details.message;
-    var ip = (req.connection.remoteAddress);
     var date = new Date().toString().split('G')[0];
-    var item = user + " [ " + ip + " ] " + " : " + tab + msg + tab + " ( " + date + " ) ";
+    var item = user + " ( " + date + " ) " + " : " + tab + msg;
     user && msg && content.messages.push(item) && fs.writeFile(content.msgFileName,JSON.stringify(content.messages));
     res.writeHead(200, {'Content-Type': contentType.html});
-    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('<br/>')).replace(/{USERNAME}/,user));
+    res.write(content.chatPage.replace(/{MESSAGES}/,content.messages.join('\n')).replace(/{USERNAME}/,user));
     res.end();
   }
   req.setEncoding('utf8');
